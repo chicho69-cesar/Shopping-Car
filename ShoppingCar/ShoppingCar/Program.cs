@@ -2,7 +2,11 @@
     add-migration nombre
 Una vez que queremos que las migraciones se reflejen en la 
 base de datos usamos el comando: 
-    update-database*/
+    update-database
+Si tuvieramos algun error en la migracion, debemos de borrar 
+la base de datos con el comando:
+    drop-database
+y volvemos a ejecura el update*/
 
 using Microsoft.EntityFrameworkCore;
 using ShoppingCar.Data;

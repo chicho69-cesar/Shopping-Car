@@ -1,12 +1,12 @@
-﻿@model Country
+﻿@model Category
 
 @{
-    ViewData["Title"] = "Crear país";
+    ViewData["Title"] = "Crear categoria";
 }
 
 <h1>Crear</h1>
 
-<h4>País</h4>
+<h4>Categoria</h4>
 
 <hr />
 
@@ -15,7 +15,7 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
-            <partial name="_Country" model="@Model"/>
+            <partial name="_Category" model="@Model"/>
 
             <div class="form-group">
                 <input type="submit" value="Crear" class="btn btn-outline-primary" />
