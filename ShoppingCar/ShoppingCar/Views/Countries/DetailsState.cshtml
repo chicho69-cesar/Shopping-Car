@@ -1,22 +1,30 @@
-﻿@model IEnumerable<Country>
+﻿@model State
 
 @{
-    ViewData["Title"] = "Países";
+    ViewData["Title"] = "" + Model.Name;
 }
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 
-<h1>Países</h1>
+<h1>Detalles</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-outline-primary">Crear Nuevo</a>
-</p>
+<div>
+    <partial name="_StateDetails" model="@Model"/>
+</div>
+
+<div>
+    <a asp-action="AddCity" asp-route-id="@Model?.Id" class="btn btn-outline-primary">Agregar Ciudad</a>
+    <a asp-action="EditState" asp-route-id="@Model?.Id" class="btn btn-outline-warning">Editar Estado</a>
+    <a asp-action="Details" asp-route-id="@Model?.Country.Id" class="btn btn-outline-success">Regresar</a>
+</div>
+
+<hr/>
 
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Países</h3>
+                <h3 class="panel-title">Ciudades</h3>
             </div>
 
             <div class="panel-body">
@@ -24,10 +32,7 @@
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.Name)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.StatesNumber)
+                                @Html.DisplayNameFor(model => model.Cities.FirstOrDefault().Name)
                             </th>
                             <th>
                                 Acciones
@@ -36,18 +41,15 @@
                     </thead>
 
                     <tbody>
-                        @foreach (var item in Model) {
+                        @foreach (var item in Model.Cities) {
                             <tr>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.StatesNumber)
-                                </td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning">Editar</a>
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info">Detalles</a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Borrar</a>
+                                    <a asp-action="EditCity" asp-route-id="@item.Id" class="btn btn-outline-warning">Editar</a>
+                                    <a asp-action="DetailsCity" asp-route-id="@item.Id" class="btn btn-outline-info">Detalles</a>
+                                    <a asp-action="DeleteCity" asp-route-id="@item.Id" class="btn btn-outline-danger">Borrar</a>
                                 </td>
                             </tr>
                         }

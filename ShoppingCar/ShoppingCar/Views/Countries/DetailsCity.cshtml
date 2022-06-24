@@ -1,0 +1,16 @@
+﻿@model City
+
+@{
+    ViewData["Title"] = "" + Model.Name;
+}
+
+<h1>Detalles</h1>
+
+<div>
+    <partial name="_CityDetails" model="@Model"/>
+</div>
+
+<div>
+    <a asp-action="EditCity" asp-route-id="@Model?.Id" class="btn btn-outline-warning">Editar</a>
+    <a asp-action="DetailsState" asp-route-id="@Model?.State.Id" class="btn btn-outline-success">Regresar a la lista</a>
+</div>

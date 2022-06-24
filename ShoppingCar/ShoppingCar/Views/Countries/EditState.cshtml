@@ -1,27 +1,27 @@
-﻿@model Country
+﻿@model StateViewModel
 
 @{
-    ViewData["Title"] = "Editar país";
+    ViewData["Title"] = "Editar estado";
 }
 
 <h1>Editar</h1>
 
-<h4>País</h4>
+<h4>Estado</h4>
 
 <hr />
 
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Edit">
+        <form asp-action="EditState">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="States" />
+            <input type="hidden" asp-for="CountryId" />
 
-            <partial name="_Country" model="@Model"/>
+            <partial name="_State" model="@Model"/>
 
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-outline-primary" />
-                <a asp-action="Index" class="btn btn-outline-success">Regresar a la lista</a>
+                <a asp-action="Details" asp-route-id="@Model.CountryId" class="btn btn-outline-success">Regresar</a>
             </div>
         </form>
     </div>
