@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCar.Data;
@@ -6,6 +7,7 @@ using ShoppingCar.Data.Entities;
 using ShoppingCar.Models;
 
 namespace ShoppingCar.Controllers {
+    [Authorize(Roles = "Admin")]
     public class CountriesController : Controller {
         private readonly DataContext _context;
 

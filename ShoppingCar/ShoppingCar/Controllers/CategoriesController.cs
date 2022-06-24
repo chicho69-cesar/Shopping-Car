@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCar.Data;
 using ShoppingCar.Data.Entities;
 
 namespace ShoppingCar.Controllers {
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller {
         private readonly DataContext _context;
 
