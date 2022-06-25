@@ -107,5 +107,21 @@ namespace ShoppingCar.Helpers {
         public async Task<IdentityResult> UpdateUserAsync(User user) {
             return await _userManager.UpdateAsync(user);
         }
+
+        public async Task<IdentityResult> ConfirmEmailAsync(User user, string token) {
+            return await _userManager.ConfirmEmailAsync(user, token);
+        }
+
+        public async Task<string> GenerateEmailConfirmationTokenAsync(User user) {
+            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(User user) {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password) {
+            return await _userManager.ResetPasswordAsync(user, token, password);
+        }
     }
 }

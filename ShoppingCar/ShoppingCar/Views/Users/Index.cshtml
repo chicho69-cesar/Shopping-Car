@@ -28,10 +28,7 @@
                                 @Html.DisplayNameFor(model => model.Email)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.FirstName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.LastName)
+                                @Html.DisplayNameFor(model => model.FullName)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.City.State.Country.Name)
@@ -46,10 +43,13 @@
                                 @Html.DisplayNameFor(model => model.Address)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.PhoneNumber)
+                                Telefono
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.UserType)
+                                Rol del usuario
+                            </th>
+                            <th>
+                                Habilitado
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.ImageFullPath)
@@ -67,10 +67,7 @@
                                     @Html.DisplayFor(modelItem => item.Email)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.FirstName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.LastName)
+                                    @Html.DisplayFor(modelItem => item.FullName)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.City.State.Country.Name)
@@ -91,7 +88,10 @@
                                     @Html.DisplayFor(modelItem => item.UserType)
                                 </td>
                                 <td>
-                                    <img src="@item.ImageFullPath" style="width:100px; height:100px; border-radius:50px" />
+                                    @Html.DisplayFor(modelItem => item.EmailConfirmed)
+                                </td>
+                                <td>
+                                    <img src="@item.ImageFullPath" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; object-position: center;"/>
                                 </td>
                             </tr>
                         }

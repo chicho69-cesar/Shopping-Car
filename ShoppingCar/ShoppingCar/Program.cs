@@ -25,6 +25,8 @@ builder.Services.AddDbContext<DataContext>(options => {
 
 //TODO: Make strongest password in order to go to production
 builder.Services.AddIdentity<User, IdentityRole>(config => {
+    config.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+    config.SignIn.RequireConfirmedEmail = true;
     config.User.RequireUniqueEmail = true;
     config.Password.RequireDigit = false;
     config.Password.RequiredUniqueChars = 0;
@@ -35,7 +37,9 @@ builder.Services.AddIdentity<User, IdentityRole>(config => {
     config.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     config.Lockout.MaxFailedAccessAttempts = 3;
     config.Lockout.AllowedForNewUsers = true;
-}).AddEntityFrameworkStores<DataContext>();
+})
+    .AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<DataContext>();
 
 builder.Services.ConfigureApplicationCookie(options => {
     options.LoginPath = "/Account/NotAuthorized";
@@ -47,6 +51,7 @@ builder.Services.AddScoped<IUserHelper, UserHelper>();
 builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 builder.Services.AddScoped<IBlobHelper, BlobHelper>();
 builder.Services.AddScoped<IGetLocation, GetLocation>();
+builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 var app = builder.Build();

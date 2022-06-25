@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ShoppingCar.Common;
 using ShoppingCar.Data;
 using ShoppingCar.Data.Entities;
 using ShoppingCar.Enums;
@@ -15,19 +16,22 @@ namespace ShoppingCar.Controllers {
         private readonly ICombosHelper _combosHelper;
         private readonly IBlobHelper _blobHelper;
         private readonly IGetLocation _getLocation;
+        private readonly IMailHelper _mailHelper;
 
         public UsersController(
             IUserHelper userHelper, 
             DataContext context, 
             ICombosHelper combosHelper, 
             IBlobHelper blobHelper,
-            IGetLocation getLocation
+            IGetLocation getLocation,
+            IMailHelper mailHelper
         ) {
             _userHelper = userHelper;
             _context = context;
             _combosHelper = combosHelper;
             _blobHelper = blobHelper;
             _getLocation = getLocation;
+            _mailHelper = mailHelper;
         }
 
         [HttpGet]
@@ -81,7 +85,27 @@ namespace ShoppingCar.Controllers {
                 model.States = await _combosHelper.GetComboStatesAsync(0);
                 model.Cities = await _combosHelper.GetComboCitiesAsync(0);
 
-                return RedirectToAction(nameof(Index));
+                string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+
+                string tokenLink = Url.Action("ConfirmEmail", "Account", new {
+                    userid = user.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
+
+                Response response = _mailHelper.SendMail(
+                    $"{model.FirstName} {model.LastName}",
+                    model.Username,
+                    "Shopping Car - Confirmación de Email",
+                    $"<h1>Shopping - Confirmación de Email</h1>" +
+                    $"Para habilitar el usuario por favor hacer click en el siguiente link:, " +
+                    $"<br/><hr/><br/><p><a href = \"{tokenLink}\">Confirmar Email</a></p>");
+
+                if (response.IsSuccess) {
+                    ViewBag.Message = "Las instrucciones para habilitar el administrador han sido enviadas al correo.";
+                    return View(model);
+                }
+
+                ModelState.AddModelError(string.Empty, response.Message);
             }
 
             return View(model);
