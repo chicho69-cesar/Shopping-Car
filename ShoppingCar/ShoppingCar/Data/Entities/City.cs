@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ShoppingCar.Data.Entities {
     public class City {
@@ -9,6 +10,7 @@ namespace ShoppingCar.Data.Entities {
         [Display(Name = "Estado")]
         public string Name { get; set; }
 
+        [JsonIgnore]
         public State State { get; set; }
 
         public ICollection<User> Users { get; set; }
