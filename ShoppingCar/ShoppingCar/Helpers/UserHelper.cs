@@ -84,7 +84,7 @@ namespace ShoppingCar.Helpers {
                 model.Username,
                 model.Password,
                 model.RememberMe,
-                false
+                true
             );
         }
 

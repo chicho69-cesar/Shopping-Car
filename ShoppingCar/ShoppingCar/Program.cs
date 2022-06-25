@@ -32,6 +32,9 @@ builder.Services.AddIdentity<User, IdentityRole>(config => {
     config.Password.RequireNonAlphanumeric = false;
     config.Password.RequireUppercase = false;
     config.Password.RequiredLength = 6;
+    config.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    config.Lockout.MaxFailedAccessAttempts = 3;
+    config.Lockout.AllowedForNewUsers = true;
 }).AddEntityFrameworkStores<DataContext>();
 
 builder.Services.ConfigureApplicationCookie(options => {
