@@ -70,6 +70,8 @@ namespace ShoppingCar.Helpers {
         public async Task<User> GetUserAsync(string email) {
             return await _context.Users
                 .Include(u => u.City)
+                .ThenInclude(c => c.State)
+                .ThenInclude(s => s.Country)
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
@@ -88,6 +90,22 @@ namespace ShoppingCar.Helpers {
 
         public async Task LogoutAsync() {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<User> GetUserAsync(Guid userId) {
+            return await _context.Users
+                .Include(u => u.City)
+                .ThenInclude(c => c.State)
+                .ThenInclude(s => s.Country)
+                .FirstOrDefaultAsync(u => u.Id == userId.ToString());
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword) {
+            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user) {
+            return await _userManager.UpdateAsync(user);
         }
     }
 }

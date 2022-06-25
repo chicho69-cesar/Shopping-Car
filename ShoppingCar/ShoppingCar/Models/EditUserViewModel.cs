@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using ShoppingCar.Data.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace ShoppingCar.Models {
@@ -20,9 +19,6 @@ namespace ShoppingCar.Models {
         [MaxLength(50, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string LastName { get; set; }
-
-        [Display(Name = "Ciudad")]
-        public City City { get; set; }
 
         [Display(Name = "Dirección")]
         [MaxLength(200, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
@@ -52,8 +48,8 @@ namespace ShoppingCar.Models {
 
         public IEnumerable<SelectListItem> Countries { get; set; }
 
-        [Display(Name = "Estado")]
-        [Range(1, int.MaxValue, ErrorMessage = "Debes de seleccionar un estado.")]
+        [Display(Name = "Departmento / Estado")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debes de seleccionar un Departamento / Estado.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public int StateId { get; set; }
 

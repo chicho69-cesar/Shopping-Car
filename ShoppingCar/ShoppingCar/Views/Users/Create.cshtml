@@ -1,17 +1,17 @@
 ﻿@model AddUserViewModel
 
 @{
-    ViewData["Title"] = "Registrate";
+    ViewData["Title"] = "Agregar admin";
 }
 
-<h2>Registrar</h2>
-<h4>Usuario</h4>
+<h2>Crear</h2>
+<h4>Administrador</h4>
 
 <hr />
 
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Register" enctype="multipart/form-data">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             <input type="hidden" asp-for="Id" />
@@ -19,7 +19,7 @@
             <input type="hidden" asp-for="Countries" />
             <input type="hidden" asp-for="States" />
             <input type="hidden" asp-for="Cities" />
-            
+
             <div class="form-group mb-3">
                 <label asp-for="Username" class="control-label"></label>
                 <input asp-for="Username" class="form-control" />
@@ -42,12 +42,12 @@
                         <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
                     </div>
                 </div>
-            </div>
+            </div>    
 
             <partial name="_User" />
 
-            <div class="form-group mt-3 mb-3">
-                <input type="submit" value="Registrar" class="btn btn-outline-primary col-md-6 offset-3"/>
+            <div class="form-group mt-2 mb-3">
+                <input type="submit" value="Guardar" class="btn btn-outline-primary col-md-6 offset-3" />
             </div>
         </form>
     </div>
@@ -57,7 +57,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
+    
     <script src="~/js/DropdownCascade.js"></script>
 
     <script type="text/javascript">
