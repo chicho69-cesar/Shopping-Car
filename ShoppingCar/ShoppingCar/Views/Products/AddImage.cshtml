@@ -1,0 +1,37 @@
+﻿@model AddProductImageViewModel
+
+@{
+    ViewData["Title"] = "Agregar imagen al producto";
+}
+
+<h1>Crear</h1>
+<h4>Imagen / Producto</h4>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="AddImage" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <input type="hidden" asp-for="ProductId" />
+            
+            <div class="form-group mb-3">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" class="form-control" type="file" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2 mb-3">
+                <input type="submit" value="Agregar" class="btn btn-outline-primary col-md-4 offset-2" />
+                <a asp-action="Details" asp-route-id="@Model.ProductId" class="btn btn-outline-success col-md-4">Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

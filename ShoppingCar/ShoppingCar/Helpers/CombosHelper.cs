@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCar.Data;
+using ShoppingCar.Data.Entities;
 
 namespace ShoppingCar.Helpers {
     public class CombosHelper : ICombosHelper {
@@ -25,7 +26,34 @@ namespace ShoppingCar.Helpers {
             });
 
             return list;
+        }
 
+        public async Task<IEnumerable<SelectListItem>> GetComboCategoriesAsync(IEnumerable<Category> filter) {
+            var categories = await _context.Categories
+                .ToListAsync();
+
+            var categoriesFilteren = new List<Category>();
+
+            foreach (var category in categories) {
+                if (!filter.Any(c => c.Id == category.Id)) {
+                    categoriesFilteren.Add(category);
+                }
+            }
+
+            List<SelectListItem> list = categoriesFilteren
+                .Select(c => new SelectListItem {
+                    Text = c.Name,
+                    Value = $"{c.Id}"
+                })
+                .OrderBy(c => c.Text)
+                .ToList();
+
+            list.Insert(0, new SelectListItem {
+                Text = "[Seleccione una categoría...]",
+                Value = "0"
+            });
+
+            return list;
         }
 
         public async Task<IEnumerable<SelectListItem>> GetComboCitiesAsync(int stateId) {

@@ -12,9 +12,11 @@ namespace ShoppingCar.Helpers {
         }
 
         public async Task DeleteBlobAsync(Guid id, string containerName) {
-            CloudBlobContainer container = _blobClient.GetContainerReference(containerName);
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference($"{id}");
-            await blockBlob.DeleteAsync();
+            try {
+                CloudBlobContainer container = _blobClient.GetContainerReference(containerName);
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference($"{id}");
+                await blockBlob.DeleteAsync();
+            } catch { }
         }
 
         public async Task<Guid> UploadBlobAsync(IFormFile file, string containerName) {
