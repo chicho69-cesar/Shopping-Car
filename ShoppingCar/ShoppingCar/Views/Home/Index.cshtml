@@ -1,19 +1,27 @@
-﻿@model IEnumerable<ProductsHomeViewModel>
+﻿@model HomeViewModel
 
 @{
     ViewData["Title"] = "Shopping Car";
 }
 
-@foreach (var item in Model) {
-    <div class="row">
+@if(Model.Quantity > 0) {
+    <a asp-action="ShowCart" class="btn btn-outline-primary">
+        Ver Carro de Compras (@Model.Quantity)
+    </a>
+}
+
+@foreach (var item in Model.Products) {
+    <div class="row" style="overflow: hidden !important;">
         @if (item.Product1 != null) {
             <div class="col-md-3">
                 <div class="card">
                     <div class="card_title">@item.Product1.Name</div>
                     
                     <div class="card_body">
-                        <img src="@item.Product1.ImageFullPath" style="height:150px; max-width:280px;" />
-                        
+                        <div class="zoom">
+                            <img src="@item.Product1.ImageFullPath" style="height:150px; max-width:280px;" />
+                        </div>
+
                         <p class="mt-2">
                             @item.Product1.Description
                             <h4>@Html.DisplayFor(modelItem => item.Product1.Price)</h4>
@@ -34,7 +42,9 @@
                     <div class="card_title">@item.Product2.Name</div>
                     
                     <div class="card_body">
-                        <img src="@item.Product2.ImageFullPath" style="height:150px; max-width:280px;" />
+                        <div class="zoom">
+                            <img src="@item.Product2.ImageFullPath" style="height:150px; max-width:280px;" />
+                        </div>
                         
                         <p class="mt-2">
                             @item.Product2.Description
@@ -56,7 +66,9 @@
                     <div class="card_title">@item.Product3.Name</div>
                     
                     <div class="card_body">
-                        <img src="@item.Product3.ImageFullPath" style="height:150px; max-width:280px;" />
+                        <div class="zoom">
+                            <img src="@item.Product3.ImageFullPath" style="height:150px; max-width:280px;" />
+                        </div>
                         
                         <p class="mt-2">
                             @item.Product3.Description
@@ -78,7 +90,9 @@
                     <div class="card_title">@item.Product4.Name</div>
                     
                     <div class="card_body">
-                        <img src="@item.Product4.ImageFullPath" style="height:150px; max-width:280px;" />
+                        <div class="zoom">
+                            <img src="@item.Product4.ImageFullPath" style="height:150px; max-width:280px;" />
+                        </div>
                         
                         <p class="mt-2">
                             @item.Product4.Description
