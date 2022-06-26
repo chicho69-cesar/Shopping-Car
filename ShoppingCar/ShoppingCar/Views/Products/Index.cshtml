@@ -69,7 +69,7 @@
                                     @Html.DisplayFor(modelItem => item.ImagesNumber)
                                 </td>
                                 <td>
-                                    <img src="@item.ImageFullPath" style="width:100px;" />
+                                    <img src="@item.ImageFullPath" loading="lazy" style="width:100px;" />
                                 </td>
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i></a>
