@@ -16,7 +16,7 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom mb-3">
             <div class="container-fluid" style="max-width: 90% !important;">
                 <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="fa-solid fa-bag-shopping text-white"></i> 
@@ -30,28 +30,28 @@
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        <li class="nav-item item-hover">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item item-hover">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Politicas</a>
                         </li>
 
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin")) {
-                            <li class="nav-item">
+                            <li class="nav-item item-hover">
                                 <a class="nav-link text-white" asp-area="" asp-controller="Countries" asp-action="Index">Países</a>
                             </li>
 
-                            <li class="nav-item">
+                            <li class="nav-item item-hover">
                                 <a class="nav-link text-white" asp-area="" asp-controller="Categories" asp-action="Index">Categorias</a>
                             </li>
 
-                            <li class="nav-item">
+                            <li class="nav-item item-hover">
                                 <a class="nav-link text-white" asp-area="" asp-controller="Users" asp-action="Index">Usuarios</a>
                             </li>
 
-                            <li class="nav-item">
+                            <li class="nav-item item-hover">
                                 <a class="nav-link text-white" asp-area="" asp-controller="Products" asp-action="Index">Productos</a>
                             </li>
                         }

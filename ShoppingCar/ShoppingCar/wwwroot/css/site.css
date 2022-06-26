@@ -16,3 +16,24 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.navbar-brand {
+    font-size: 1.75rem;
+}
+
+.navbar-brand:hover {
+    color: #f1f1f1 !important;
+}
+
+.item-hover {
+    margin: 0 0.5rem;
+    line-height: 1 !important;
+    font-size: 1rem;
+    border-bottom: 2px solid transparent !important;
+    transition: all 0.2s ease;
+}
+
+.item-hover:hover {
+    color: #e1e1e1 !important;
+    border-bottom: 2px solid #e1e1e1 !important;
+}
