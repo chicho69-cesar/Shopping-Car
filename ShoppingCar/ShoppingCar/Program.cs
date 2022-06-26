@@ -6,7 +6,12 @@ base de datos usamos el comando:
 Si tuvieramos algun error en la migracion, debemos de borrar 
 la base de datos con el comando:
     drop-database
-y volvemos a ejecura el update*/
+y volvemos a ejecura el update. Cuando haya algun conflicto con alguna
+migracion lo que debemos hacer es borrar todas las migraciones con
+    remove-migration
+y posteriormente crear una nueva migracion para todas las entidades
+que borramos, despues hacemos drop-database ya que esta ya no tiene
+la historia borramos y finalmente modificamos la base de datos.*/
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

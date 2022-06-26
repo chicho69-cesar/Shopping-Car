@@ -1,0 +1,33 @@
+﻿@model CreateProductViewModel
+
+@{
+    ViewData["Title"] = "Crear producto";
+}
+
+<h1>Crear</h1>
+<h4>Producto</h4>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <input type="hidden" asp-for="Categories" />
+            
+            <partial name="_CreateProduct"/>
+            
+            <div class="form-group mt-2 mb-3">
+                <input type="submit" value="Crear" class="btn btn-outline-primary col-md-4 offset-2" />
+                <a asp-action="Index" class="btn btn-outline-success col-md-4">Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

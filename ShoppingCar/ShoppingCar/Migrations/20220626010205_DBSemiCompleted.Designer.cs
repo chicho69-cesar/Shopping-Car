@@ -12,8 +12,8 @@ using ShoppingCar.Data;
 namespace ShoppingCar.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220624044542_UserEntities")]
-    partial class UserEntities
+    [Migration("20220626010205_DBSemiCompleted")]
+    partial class DBSemiCompleted
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -226,6 +226,83 @@ namespace ShoppingCar.Migrations
                     b.ToTable("Countries");
                 });
 
+            modelBuilder.Entity("ShoppingCar.Data.Entities.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<float>("Stock")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("ShoppingCar.Data.Entities.ProductCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("ProductId", "CategoryId")
+                        .IsUnique()
+                        .HasFilter("[ProductId] IS NOT NULL AND [CategoryId] IS NOT NULL");
+
+                    b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("ShoppingCar.Data.Entities.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<Guid>("ImageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
+                });
+
             modelBuilder.Entity("ShoppingCar.Data.Entities.State", b =>
                 {
                     b.Property<int>("Id")
@@ -409,6 +486,30 @@ namespace ShoppingCar.Migrations
                     b.Navigation("State");
                 });
 
+            modelBuilder.Entity("ShoppingCar.Data.Entities.ProductCategory", b =>
+                {
+                    b.HasOne("ShoppingCar.Data.Entities.Category", "Category")
+                        .WithMany("ProductCategories")
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("ShoppingCar.Data.Entities.Product", "Product")
+                        .WithMany("ProductCategories")
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ShoppingCar.Data.Entities.ProductImage", b =>
+                {
+                    b.HasOne("ShoppingCar.Data.Entities.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ShoppingCar.Data.Entities.State", b =>
                 {
                     b.HasOne("ShoppingCar.Data.Entities.Country", "Country")
@@ -427,6 +528,11 @@ namespace ShoppingCar.Migrations
                     b.Navigation("City");
                 });
 
+            modelBuilder.Entity("ShoppingCar.Data.Entities.Category", b =>
+                {
+                    b.Navigation("ProductCategories");
+                });
+
             modelBuilder.Entity("ShoppingCar.Data.Entities.City", b =>
                 {
                     b.Navigation("Users");
@@ -435,6 +541,13 @@ namespace ShoppingCar.Migrations
             modelBuilder.Entity("ShoppingCar.Data.Entities.Country", b =>
                 {
                     b.Navigation("States");
+                });
+
+            modelBuilder.Entity("ShoppingCar.Data.Entities.Product", b =>
+                {
+                    b.Navigation("ProductCategories");
+
+                    b.Navigation("ProductImages");
                 });
 
             modelBuilder.Entity("ShoppingCar.Data.Entities.State", b =>

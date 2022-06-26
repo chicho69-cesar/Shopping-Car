@@ -8,5 +8,7 @@ namespace ShoppingCar.Data.Entities {
         [MaxLength(50, ErrorMessage = "El campo {0} debe tener maximo {1} caracteres")]
         [Display(Name = "Categoria")]
         public string Name { get; set; }
+
+        public ICollection<ProductCategory> ProductCategories { get; set; }
     }
 }
