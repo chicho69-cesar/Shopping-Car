@@ -30,9 +30,21 @@
     </div>
 
     <div class="col-md-4">
-        <img src="@Model.ImageFullPath" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; object-position: center;" />
+        <img src="@Model.ImageFullPath" class="avatar"/>
     </div>
 </div>
+
+<style>
+    .avatar {
+        display: block;
+        margin: auto;
+        width: 250px; 
+        height: 250px; 
+        border-radius: 50%; 
+        object-fit: cover; 
+        object-position: center;
+    }
+</style>
 
 @section Scripts {
     @{

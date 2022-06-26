@@ -6,16 +6,22 @@
 
     <title>@ViewData["Title"]</title>
 
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico"/>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ShoppingCar.styles.css" asp-append-version="true" />
 </head>
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ShoppingCar</a>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3">
+            <div class="container-fluid" style="max-width: 90% !important;">
+                <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fa-solid fa-bag-shopping text-white"></i> 
+                    ShoppingCar
+                </a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -25,24 +31,24 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Politicas</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Politicas</a>
                         </li>
 
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin")) {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Countries" asp-action="Index">Países</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Countries" asp-action="Index">Países</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Categorias</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Categories" asp-action="Index">Categorias</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Usuarios</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Users" asp-action="Index">Usuarios</a>
                             </li>
                         }
                     </ul>
@@ -50,17 +56,23 @@
                     <ul class="nav navbar-nav navbar-right">
                         @if (User.Identity.IsAuthenticated) {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangeUser">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Account" asp-action="ChangeUser">
                                     @User.Identity.Name
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="btn btn-outline-secondary" asp-area="" asp-controller="Account" asp-action="Logout">Cerrar Sesión</a>
+                                <a class="btn btn-danger text-white" asp-area="" asp-controller="Account" asp-action="Logout">
+                                    <i class="fa-solid fa-power-off"></i>
+                                    Cerrar Sesión
+                                </a>
                             </li>
                         } else {
                             <li class="nav-item">
-                                <a class="btn btn-outline-success" asp-area="" asp-controller="Account" asp-action="Login">Iniciar Sesión</a>
+                                <a class="btn btn-success text-white" asp-area="" asp-controller="Account" asp-action="Login">
+                                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                                    Iniciar Sesión
+                                </a>
                             </li>
                         }
                     </ul>
@@ -69,7 +81,7 @@
         </nav>
     </header>
 
-    <div class="container">
+    <div class="container-fluid" style="max-width: 90% !important;">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -83,6 +95,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/font-awesome/js/fontawesome.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
