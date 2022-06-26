@@ -316,6 +316,39 @@ namespace ShoppingCar.Controllers {
             return View(model);
         }
 
+        /*[HttpGet]
+        public IActionResult ResendToken() {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResendToken(ResendTokenViewModel model) {
+            if (ModelState.IsValid) {
+                User user = await _userHelper.GetUserAsync(model.Username);
+                string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                string tokenLink = Url.Action("ConfirmEmail", "Account", new {
+                    userid = user.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
+
+                Response response = _mailHelper.SendMail(
+                    $"{model.FirstName} {model.LastName}",
+                    model.Username,
+                    "Shopping - Confirmación de Email",
+                    $"<h1>Shopping - Confirmación de Email</h1>" +
+                        $"Para habilitar el usuario por favor hacer click en el siguiente link:, " +
+                        $"<p><a href = \"{tokenLink}\">Confirmar Email</a></p>");
+                if (response.IsSuccess) {
+                    _flashMessage.Info("Email Re-Envíado. Para poder ingresar al sistema, siga las instrucciones que han sido enviadas a su correo.");
+                    return RedirectToAction(nameof(Login));
+                }
+
+                _flashMessage.Danger(response.Message);
+            }
+            return View(model);
+        }*/
+
         public JsonResult GetStates(int countryId) {
             var states = _getLocation.GetStates(countryId);
             return Json(states);
