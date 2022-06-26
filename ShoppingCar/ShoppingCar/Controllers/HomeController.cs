@@ -29,39 +29,11 @@ namespace ShoppingCar.Controllers {
                 .Include(p => p.ProductCategories)
                 .OrderBy(p => p.Description)
                 .ToListAsync();
-            
-            var productsHome = new List<ProductsHomeViewModel> { 
-                new ProductsHomeViewModel() 
-            };
-            
-            int i = 1;
-            
-            foreach (Product product in products) {
-                if (i == 1) {
-                    productsHome.LastOrDefault().Product1 = product;
-                }
-
-                if (i == 2) {
-                    productsHome.LastOrDefault().Product2 = product;
-                }
-
-                if (i == 3) {
-                    productsHome.LastOrDefault().Product3 = product;
-                }
-
-                if (i == 4) {
-                    productsHome.LastOrDefault().Product4 = product;
-                    productsHome.Add(new ProductsHomeViewModel());
-                    i = 0;
-                }
-
-                i++;
-            }
 
             var model = new HomeViewModel { 
-                Products = productsHome 
+                Products = products 
             };
-            
+
             User user = await _userHelper
                 .GetUserAsync(User.Identity.Name);
             
@@ -74,6 +46,8 @@ namespace ShoppingCar.Controllers {
             return View(model);
         }
 
+        /*TODO: Hacer que el agregar al carrito sea a traves de AJAX
+        para evitar que la pagina se recarge*/
         [HttpGet]
         public async Task<IActionResult> Add(int? id) {
             if (id == null) {
