@@ -316,7 +316,8 @@ namespace ShoppingCar.Controllers {
             return View(model);
         }
 
-        /*[HttpGet]
+        /* TODO: Descubrir para que mierda es esto
+        [HttpGet]
         public IActionResult ResendToken() {
             return View();
         }
