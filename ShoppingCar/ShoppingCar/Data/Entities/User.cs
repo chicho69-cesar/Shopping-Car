@@ -39,9 +39,13 @@ namespace ShoppingCar.Data.Entities {
         public UserType UserType { get; set; }
 
         [Display(Name = "Usuario")]
-        public string FullName => $"{FirstName} {LastName}";
+        public string FullName => 
+            $"{FirstName} {LastName}";
 
         [Display(Name = "Usuario")]
-        public string FullNameWithDocument => $"{FirstName} {LastName} - {Document}";
+        public string FullNameWithDocument => 
+            $"{FirstName} {LastName} - {Document}";
+
+        public ICollection<Sale> Sales { get; set; }
     }
 }

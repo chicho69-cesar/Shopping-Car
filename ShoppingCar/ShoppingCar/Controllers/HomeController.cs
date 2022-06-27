@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ShoppingCar.Common;
 using ShoppingCar.Data;
 using ShoppingCar.Data.Entities;
 using ShoppingCar.Helpers;
@@ -11,15 +13,18 @@ namespace ShoppingCar.Controllers {
         private readonly ILogger<HomeController> _logger;
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
+        private readonly IOrdersHelper _ordersHelper;
 
         public HomeController(
             ILogger<HomeController> logger,
             DataContext context,
-            IUserHelper userHelper
+            IUserHelper userHelper,
+            IOrdersHelper ordersHelper
         ) {
             _logger = logger;
             _context = context;
             _userHelper = userHelper;
+            _ordersHelper = ordersHelper;
         }
 
         [HttpGet]
@@ -27,6 +32,7 @@ namespace ShoppingCar.Controllers {
             List<Product> products = await _context.Products
                 .Include(p => p.ProductImages)
                 .Include(p => p.ProductCategories)
+                .Where(p => p.Stock > 0)
                 .OrderBy(p => p.Description)
                 .ToListAsync();
 
@@ -147,6 +153,163 @@ namespace ShoppingCar.Controllers {
             await _context.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> ShowCart() {
+            User user = await _userHelper
+                .GetUserAsync(User.Identity.Name);
+
+            if (user == null) {
+                return NotFound();
+            }
+
+            List<TemporalSale> temporalSales = await _context.TemporalSales
+                .Include(ts => ts.Product)
+                .ThenInclude(p => p.ProductImages)
+                .Where(ts => ts.User.Id == user.Id)
+                .ToListAsync();
+
+            var model = new ShowCartViewModel {
+                User = user,
+                TemporalSales = temporalSales,
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DecreaseQuantity(int? id) {
+            if (id == null) {
+                return NotFound();
+            }
+
+            TemporalSale temporalSale = await _context.TemporalSales.FindAsync(id);
+            if (temporalSale == null) {
+                return NotFound();
+            }
+
+            if (temporalSale.Quantity > 1) {
+                temporalSale.Quantity--;
+                _context.TemporalSales.Update(temporalSale);
+                
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(ShowCart));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> IncreaseQuantity(int? id) {
+            if (id == null) {
+                return NotFound();
+            }
+
+            TemporalSale temporalSale = await _context.TemporalSales.FindAsync(id);
+            if (temporalSale == null) {
+                return NotFound();
+            }
+
+            temporalSale.Quantity++;
+            _context.TemporalSales.Update(temporalSale);
+            
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ShowCart));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id) {
+            if (id == null) {
+                return NotFound();
+            }
+
+            TemporalSale temporalSale = await _context.TemporalSales.FindAsync(id);
+            if (temporalSale == null) {
+                return NotFound();
+            }
+
+            _context.TemporalSales.Remove(temporalSale);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction(nameof(ShowCart));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id) {
+            if (id == null) {
+                return NotFound();
+            }
+
+            TemporalSale temporalSale = await _context.TemporalSales.FindAsync(id);
+            if (temporalSale == null) {
+                return NotFound();
+            }
+
+            var model = new EditTemporalSaleViewModel {
+                Id = temporalSale.Id,
+                Quantity = temporalSale.Quantity,
+                Remarks = temporalSale.Remarks,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, EditTemporalSaleViewModel model) {
+            if (id != model.Id) {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid) {
+                try {
+                    TemporalSale temporalSale = await _context.TemporalSales.FindAsync(id);
+                    temporalSale.Quantity = model.Quantity;
+                    temporalSale.Remarks = model.Remarks;
+                    
+                    _context.Update(temporalSale);
+                    await _context.SaveChangesAsync();
+                } catch (Exception exception) {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                    return View(model);
+                }
+
+                return RedirectToAction(nameof(ShowCart));
+            }
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult OrderSuccess() {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ShowCart(ShowCartViewModel model) {
+            User user = await _userHelper.GetUserAsync(User.Identity.Name);
+            if (user == null) {
+                return NotFound();
+            }
+
+            model.User = user;
+            model.TemporalSales = await _context.TemporalSales
+                .Include(ts => ts.Product)
+                .ThenInclude(p => p.ProductImages)
+                .Where(ts => ts.User.Id == user.Id)
+                .ToListAsync();
+
+            Response response = await _ordersHelper.ProcessOrderAsync(model);
+            if (response.IsSuccess) {
+                return RedirectToAction(nameof(OrderSuccess));
+            }
+
+            ModelState.AddModelError(string.Empty, response.Message);
+            return View(model);
         }
 
         [HttpGet]

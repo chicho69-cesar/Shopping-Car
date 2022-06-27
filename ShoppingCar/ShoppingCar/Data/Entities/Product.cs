@@ -29,16 +29,20 @@ namespace ShoppingCar.Data.Entities {
         public ICollection<ProductCategory> ProductCategories { get; set; }
 
         [Display(Name = "Categorías")]
-        public int CategoriesNumber => ProductCategories == null ? 0 : ProductCategories.Count;
+        public int CategoriesNumber => 
+            ProductCategories == null ? 0 : ProductCategories.Count;
 
         public ICollection<ProductImage> ProductImages { get; set; }
 
         [Display(Name = "Fotos")]
-        public int ImagesNumber => ProductImages == null ? 0 : ProductImages.Count;
+        public int ImagesNumber => 
+            ProductImages == null ? 0 : ProductImages.Count;
 
         [Display(Name = "Foto")]
         public string ImageFullPath => ProductImages == null || ProductImages.Count == 0
             ? $"https://localhost:7274/images/noimage.png"
             : ProductImages.FirstOrDefault().ImageFullPath;
+
+        public ICollection<SaleDetail> SaleDetails { get; set; }
     }
 }

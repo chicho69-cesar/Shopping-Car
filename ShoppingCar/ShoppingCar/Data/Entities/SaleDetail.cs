@@ -1,10 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace ShoppingCar.Data.Entities {
-    public class TemporalSale {
+    public class SaleDetail {
         public int Id { get; set; }
 
-        public User User { get; set; }
+        public Sale Sale { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Comentarios")]
+        public string Remarks { get; set; }
 
         public Product Product { get; set; }
 
@@ -12,10 +16,6 @@ namespace ShoppingCar.Data.Entities {
         [Display(Name = "Cantidad")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public float Quantity { get; set; }
-
-        [DataType(DataType.MultilineText)]
-        [Display(Name = "Comentarios")]
-        public string Remarks { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C2}")]
         [Display(Name = "Valor")]
