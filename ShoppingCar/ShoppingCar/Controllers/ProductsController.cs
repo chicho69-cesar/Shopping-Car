@@ -5,6 +5,7 @@ using ShoppingCar.Data;
 using ShoppingCar.Data.Entities;
 using ShoppingCar.Helpers;
 using ShoppingCar.Models;
+using Vereyon.Web;
 
 namespace ShoppingCar.Controllers {
     [Authorize(Roles = "Admin")]
@@ -12,11 +13,18 @@ namespace ShoppingCar.Controllers {
         private readonly DataContext _context;
         private readonly ICombosHelper _combosHelper;
         private readonly IBlobHelper _blobHelper;
+        private readonly IFlashMessage _flashMessage;
 
-        public ProductsController(DataContext context, ICombosHelper combosHelper, IBlobHelper blobHelper) {
+        public ProductsController(
+            DataContext context, 
+            ICombosHelper combosHelper, 
+            IBlobHelper blobHelper,
+            IFlashMessage flashMessage
+        ) {
             _context = context;
             _combosHelper = combosHelper;
             _blobHelper = blobHelper;
+            _flashMessage = flashMessage;
         }
 
         [HttpGet]
@@ -73,12 +81,12 @@ namespace ShoppingCar.Controllers {
                     return RedirectToAction(nameof(Index));
                 } catch (DbUpdateException dbUpdateException) {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate")) {
-                        ModelState.AddModelError(string.Empty, "Ya existe un producto con el mismo nombre.");
+                        _flashMessage.Danger("Ya existe un producto con el mismo nombre");
                     } else {
-                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                        _flashMessage.Danger(dbUpdateException.InnerException.Message);
                     }
                 } catch (Exception exception) {
-                    ModelState.AddModelError(string.Empty, exception.Message);
+                    _flashMessage.Danger(exception.Message);
                 }
             }
 
@@ -129,12 +137,12 @@ namespace ShoppingCar.Controllers {
                 return RedirectToAction(nameof(Index));
             } catch (DbUpdateException dbUpdateException) {
                 if (dbUpdateException.InnerException.Message.Contains("duplicate")) {
-                    ModelState.AddModelError(string.Empty, "Ya existe un producto con el mismo nombre.");
+                    _flashMessage.Danger("Ya existe un producto con el mismo nombre");
                 } else {
-                    ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                    _flashMessage.Danger(dbUpdateException.InnerException.Message);
                 }
             } catch (Exception exception) {
-                ModelState.AddModelError(string.Empty, exception.Message);
+                _flashMessage.Danger(exception.Message);
             }
 
             return View(model);
@@ -231,7 +239,7 @@ namespace ShoppingCar.Controllers {
                     
                     return RedirectToAction(nameof(Details), new { Id = product.Id });
                 } catch (Exception exception) {
-                    ModelState.AddModelError(string.Empty, exception.Message);
+                    _flashMessage.Danger(exception.Message);
                 }
             }
 
@@ -309,7 +317,7 @@ namespace ShoppingCar.Controllers {
                     
                     return RedirectToAction(nameof(Details), new { Id = product.Id });
                 } catch (Exception exception) {
-                    ModelState.AddModelError(string.Empty, exception.Message);
+                    _flashMessage.Danger(exception.Message);
                 }
             }
 

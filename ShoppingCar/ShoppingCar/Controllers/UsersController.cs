@@ -7,6 +7,7 @@ using ShoppingCar.Data.Entities;
 using ShoppingCar.Enums;
 using ShoppingCar.Helpers;
 using ShoppingCar.Models;
+using Vereyon.Web;
 
 namespace ShoppingCar.Controllers {
     [Authorize(Roles = "Admin")]
@@ -17,6 +18,7 @@ namespace ShoppingCar.Controllers {
         private readonly IBlobHelper _blobHelper;
         private readonly IGetLocation _getLocation;
         private readonly IMailHelper _mailHelper;
+        private readonly IFlashMessage _flashMessage;
 
         public UsersController(
             IUserHelper userHelper, 
@@ -24,7 +26,8 @@ namespace ShoppingCar.Controllers {
             ICombosHelper combosHelper, 
             IBlobHelper blobHelper,
             IGetLocation getLocation,
-            IMailHelper mailHelper
+            IMailHelper mailHelper,
+            IFlashMessage flashMessage
         ) {
             _userHelper = userHelper;
             _context = context;
@@ -32,6 +35,7 @@ namespace ShoppingCar.Controllers {
             _blobHelper = blobHelper;
             _getLocation = getLocation;
             _mailHelper = mailHelper;
+            _flashMessage = flashMessage;
         }
 
         [HttpGet]
@@ -72,7 +76,7 @@ namespace ShoppingCar.Controllers {
                 User user = await _userHelper.AddUserAsync(model);
                 
                 if (user == null) {
-                    ModelState.AddModelError(string.Empty, "Este correo ya está siendo usado.");
+                    _flashMessage.Danger("Este correo ya está siendo usado");
 
                     model.Countries = await _combosHelper.GetComboCountriesAsync();
                     model.States = await _combosHelper.GetComboStatesAsync(0);
@@ -101,11 +105,11 @@ namespace ShoppingCar.Controllers {
                     $"<br/><hr/><br/><p><a href = \"{tokenLink}\">Confirmar Email</a></p>");
 
                 if (response.IsSuccess) {
-                    ViewBag.Message = "Las instrucciones para habilitar el administrador han sido enviadas al correo.";
+                    _flashMessage.Info("Las instrucciones para habilitar al administrador han sido enviadas al correo.");
                     return View(model);
                 }
 
-                ModelState.AddModelError(string.Empty, response.Message);
+                _flashMessage.Danger(response.Message);
             }
 
             return View(model);

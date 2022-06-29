@@ -5,10 +5,11 @@
 }
 
 <h1>Agregar</h1>
-
 <h4>Ciudad</h4>
 
 <hr />
+
+<flash dismissable="true" />
 
 <div class="row">
     <div class="col-md-12">
@@ -19,8 +20,8 @@
             <partial name="_City" model="@Model"/>
 
             <div class="form-group">
-                <input type="submit" value="Crear" class="btn btn-outline-primary" />
-                <a asp-action="DetailsState" asp-route-id="@Model.StateId" class="btn btn-outline-success">Regresar</a>
+                <input type="submit" value="Crear" class="btn btn-outline-primary col-md-5 offset-1" />
+                <a asp-action="DetailsState" asp-route-id="@Model.StateId" class="btn btn-outline-success col-md-5">Regresar</a>
             </div>
         </form>
     </div>

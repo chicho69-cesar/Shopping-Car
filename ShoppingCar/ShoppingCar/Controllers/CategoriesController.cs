@@ -3,14 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCar.Data;
 using ShoppingCar.Data.Entities;
+using Vereyon.Web;
 
 namespace ShoppingCar.Controllers {
     [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller {
         private readonly DataContext _context;
+        private readonly IFlashMessage _flashMessage;
 
-        public CategoriesController(DataContext context) {
+        public CategoriesController(DataContext context, IFlashMessage flashMessage) {
             _context = context;
+            _flashMessage = flashMessage;
         }
 
         [HttpGet]
@@ -49,12 +52,12 @@ namespace ShoppingCar.Controllers {
                     return RedirectToAction(nameof(Index));
                 } catch (DbUpdateException dbUpdateException) {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate")) {
-                        ModelState.AddModelError(string.Empty, "Ya existe una categoria con el mismo nombre.");
+                        _flashMessage.Danger("Ya existe una categoria con el mismo nombre");
                     } else {
-                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                        _flashMessage.Danger(dbUpdateException.InnerException.Message);
                     }
                 } catch (Exception exception) {
-                    ModelState.AddModelError(string.Empty, exception.Message);
+                    _flashMessage.Danger(exception.Message);
                 }
             }
 
@@ -90,12 +93,12 @@ namespace ShoppingCar.Controllers {
                     return RedirectToAction(nameof(Index));
                 } catch (DbUpdateException dbUpdateException) {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate")) {
-                        ModelState.AddModelError(string.Empty, "Ya existe una categoria con el mismo nombre.");
+                        _flashMessage.Danger("Ya existe una categoria con el mismo nombre");
                     } else {
-                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                        _flashMessage.Danger(dbUpdateException.InnerException.Message);
                     }
                 } catch (Exception exception) {
-                    ModelState.AddModelError(string.Empty, exception.Message);
+                    _flashMessage.Danger(exception.Message);
                 }
             }
 

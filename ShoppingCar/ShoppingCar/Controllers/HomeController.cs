@@ -7,6 +7,7 @@ using ShoppingCar.Data.Entities;
 using ShoppingCar.Helpers;
 using ShoppingCar.Models;
 using System.Diagnostics;
+using Vereyon.Web;
 
 namespace ShoppingCar.Controllers {
     public class HomeController : Controller {
@@ -14,17 +15,20 @@ namespace ShoppingCar.Controllers {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
         private readonly IOrdersHelper _ordersHelper;
+        private readonly IFlashMessage _flashMessage;
 
         public HomeController(
             ILogger<HomeController> logger,
             DataContext context,
             IUserHelper userHelper,
-            IOrdersHelper ordersHelper
+            IOrdersHelper ordersHelper,
+            IFlashMessage flashMessage
         ) {
             _logger = logger;
             _context = context;
             _userHelper = userHelper;
             _ordersHelper = ordersHelper;
+            _flashMessage = flashMessage;
         }
 
         [HttpGet]
@@ -272,7 +276,7 @@ namespace ShoppingCar.Controllers {
                     _context.Update(temporalSale);
                     await _context.SaveChangesAsync();
                 } catch (Exception exception) {
-                    ModelState.AddModelError(string.Empty, exception.Message);
+                    _flashMessage.Danger(exception.Message);
                     return View(model);
                 }
 
@@ -308,7 +312,7 @@ namespace ShoppingCar.Controllers {
                 return RedirectToAction(nameof(OrderSuccess));
             }
 
-            ModelState.AddModelError(string.Empty, response.Message);
+            _flashMessage.Danger(response.Message);
             return View(model);
         }
 
