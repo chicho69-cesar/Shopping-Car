@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using ShoppingCar.Data;
 using ShoppingCar.Data.Entities;
 using ShoppingCar.Helpers;
+using Vereyon.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,7 @@ builder.Services.ConfigureApplicationCookie(options => {
 });
 
 builder.Services.AddTransient<SeedDb>();
+builder.Services.AddFlashMessage();
 builder.Services.AddScoped<IUserHelper, UserHelper>();
 builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 builder.Services.AddScoped<IBlobHelper, BlobHelper>();
