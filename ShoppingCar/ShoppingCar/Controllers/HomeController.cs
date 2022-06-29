@@ -32,16 +32,54 @@ namespace ShoppingCar.Controllers {
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index() {
-            List<Product> products = await _context.Products
-                .Include(p => p.ProductImages)
-                .Include(p => p.ProductCategories)
-                .Where(p => p.Stock > 0)
-                .OrderBy(p => p.Description)
-                .ToListAsync();
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber) {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "NameDesc" : "";
+            ViewData["PriceSortParm"] = sortOrder == "Price" ? "PriceDesc" : "Price";
 
-            var model = new HomeViewModel { 
-                Products = products 
+            if (searchString != null) {
+                pageNumber = 1;
+            } else {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            IQueryable<Product> query = _context.Products
+               .Include(p => p.ProductImages)
+               .Include(p => p.ProductCategories)
+               .ThenInclude(pc => pc.Category);
+
+            if (!string.IsNullOrEmpty(searchString)) {
+                query = query
+                    .Where(p => (
+                        p.Name.ToLower()
+                            .Contains(searchString.ToLower()) ||
+                        p.ProductCategories
+                            .Any(pc => pc.Category.Name.ToLower().Contains(searchString.ToLower()))) &&
+                        p.Stock > 0
+                    );
+            } else {
+                query = query
+                    .Where(p => p.Stock > 0);
+            }
+
+            query = sortOrder switch {
+                "NameDesc" => query
+                    .OrderByDescending(p => p.Name),
+                "Price" => query
+                    .OrderBy(p => p.Price),
+                "PriceDesc" => query
+                    .OrderByDescending(p => p.Price),
+                _ => query
+                    .OrderBy(p => p.Name),
+            };
+
+            int pageSize = 8;
+
+            var model = new HomeViewModel  {
+                Products = await PaginatedList<Product>.CreateAsync(query, pageNumber ?? 1, pageSize),
+                Categories = await _context.Categories.ToListAsync(),
             };
 
             User user = await _userHelper
