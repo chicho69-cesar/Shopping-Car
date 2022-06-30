@@ -4,8 +4,6 @@
     ViewData["Title"] = "Mis pedidos";
 }
 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
-
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
@@ -76,8 +74,6 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    
-    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

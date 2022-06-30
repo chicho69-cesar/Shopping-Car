@@ -10,6 +10,8 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+    <link rel="stylesheet" href="~/lib/datatables/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/lib/jqueryui/jquery-ui.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ShoppingCar.styles.css" asp-append-version="true" />
 </head>
@@ -97,20 +99,30 @@
 
     <div class="container-fluid" style="max-width: 95% !important;">
         <main role="main" class="pb-3">
+            <partial name="_BusyIndicatorPartial" />
             @RenderBody()
         </main>
     </div>
 
-    @*<footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - ShoppingCar - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>*@
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jasny/jasny-bootstrap.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/font-awesome/js/fontawesome.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/lib/font-awesome/js/all.min.js"></script>
+    
+    <script>
+        function displayBusyIndicator() {
+            $('.loading').show();
+        }
+    </script>
+
+    <script>
+        $(window).on('beforeunload', function () {
+            displayBusyIndicator();
+        });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
