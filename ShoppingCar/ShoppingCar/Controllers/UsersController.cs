@@ -19,6 +19,7 @@ namespace ShoppingCar.Controllers {
         private readonly IGetLocation _getLocation;
         private readonly IMailHelper _mailHelper;
         private readonly IFlashMessage _flashMessage;
+        private readonly IBodyMailHelper _bodyMailHelper;
 
         public UsersController(
             IUserHelper userHelper, 
@@ -27,7 +28,8 @@ namespace ShoppingCar.Controllers {
             IBlobHelper blobHelper,
             IGetLocation getLocation,
             IMailHelper mailHelper,
-            IFlashMessage flashMessage
+            IFlashMessage flashMessage,
+            IBodyMailHelper bodyMailHelper
         ) {
             _userHelper = userHelper;
             _context = context;
@@ -36,6 +38,7 @@ namespace ShoppingCar.Controllers {
             _getLocation = getLocation;
             _mailHelper = mailHelper;
             _flashMessage = flashMessage;
+            _bodyMailHelper = bodyMailHelper;
         }
 
         [HttpGet]
@@ -100,9 +103,8 @@ namespace ShoppingCar.Controllers {
                     $"{model.FirstName} {model.LastName}",
                     model.Username,
                     "Shopping Car - Confirmación de Email",
-                    $"<h1>Shopping - Confirmación de Email</h1>" +
-                    $"Para habilitar el usuario por favor hacer click en el siguiente link:, " +
-                    $"<br/><hr/><br/><p><a href = \"{tokenLink}\">Confirmar Email</a></p>");
+                    _bodyMailHelper.GetConfirmEmailMessage(tokenLink)
+                );
 
                 if (response.IsSuccess) {
                     _flashMessage.Info("Las instrucciones para habilitar al administrador han sido enviadas al correo.");

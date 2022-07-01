@@ -59,6 +59,7 @@ builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 builder.Services.AddScoped<IBlobHelper, BlobHelper>();
 builder.Services.AddScoped<IGetLocation, GetLocation>();
 builder.Services.AddScoped<IMailHelper, MailHelper>();
+builder.Services.AddScoped<IBodyMailHelper, BodyMailHelper>();
 builder.Services.AddScoped<IOrdersHelper, OrdersHelper>();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 

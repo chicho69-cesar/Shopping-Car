@@ -148,6 +148,7 @@ namespace ShoppingCar.Controllers {
             return RedirectToAction(nameof(Details), new { Id = sale.Id });
         }
 
+        [HttpGet]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> MyOrders() {
             return View(await _context.Sales
@@ -158,6 +159,7 @@ namespace ShoppingCar.Controllers {
                 .ToListAsync());
         }
 
+        [HttpGet]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> MyDetails(int? id) {
             if (id == null) {

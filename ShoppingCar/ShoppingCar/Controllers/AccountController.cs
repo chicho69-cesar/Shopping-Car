@@ -17,6 +17,7 @@ namespace ShoppingCar.Controllers {
         private readonly IGetLocation _getLocation;
         private readonly IMailHelper _mailHelper;
         private readonly IFlashMessage _flashMessage;
+        private readonly IBodyMailHelper _bodyMailHelper;
 
         public AccountController(
             IUserHelper userHelper, 
@@ -25,7 +26,8 @@ namespace ShoppingCar.Controllers {
             IBlobHelper blobHelper,
             IGetLocation getLocation,
             IMailHelper mailHelper,
-            IFlashMessage flashMessage
+            IFlashMessage flashMessage,
+            IBodyMailHelper bodyMailHelper
         ) {
             _userHelper = userHelper;
             _context = context;
@@ -34,6 +36,7 @@ namespace ShoppingCar.Controllers {
             _getLocation = getLocation;
             _mailHelper = mailHelper;
             _flashMessage = flashMessage;
+            _bodyMailHelper = bodyMailHelper;
         }
 
         [HttpGet]
@@ -115,13 +118,11 @@ namespace ShoppingCar.Controllers {
                     token = myToken
                 }, protocol: HttpContext.Request.Scheme);
 
-                Response response = _mailHelper.SendMail (
+                Response response = _mailHelper.SendMail(
                     $"{model.FirstName} {model.LastName}",
                     model.Username,
                     "Shopping Car - Confirmación de Email",
-                    $"<h1>Shopping - Confirmación de Email</h1>" +
-                    $"Para habilitar el usuario por favor hacer click en el siguiente link:, " +
-                    $"<br/><hr/><br/><p><a href = \"{tokenLink}\">Confirmar Email</a></p>"
+                    _bodyMailHelper.GetConfirmEmailMessage(tokenLink)
                 );
                 
                 if (response.IsSuccess) {
@@ -186,20 +187,15 @@ namespace ShoppingCar.Controllers {
                     $"{user.FullName}",
                     model.Email,
                     "Shopping - Recuperación de Contraseña",
-                    $"<h1>Shopping - Recuperación de Contraseña</h1>" +
-                    $"Para recuperar la contraseña haga click en el siguiente enlace:" +
-                    $"<br/><hr/><br/><p><a href = \"{link}\">Reset Password</a></p>"
+                    _bodyMailHelper.GetResetPasswordMessage(link)
                 );
 
                 _flashMessage.Info("Las instrucciones para recuperar la contraseña han sido enviadas a su correo.");
+                
                 return RedirectToAction(nameof(Login));
             }
 
             return View(model);
-        }
-
-        public dynamic GetViewBag() {
-            return ViewBag;
         }
 
         [HttpGet]
@@ -334,6 +330,7 @@ namespace ShoppingCar.Controllers {
         public async Task<IActionResult> ResendToken(ResendTokenViewModel model) {
             if (ModelState.IsValid) {
                 User user = await _userHelper.GetUserAsync(model.Username);
+                
                 string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
                 string tokenLink = Url.Action("ConfirmEmail", "Account", new {
                     userid = user.Id,
@@ -344,9 +341,9 @@ namespace ShoppingCar.Controllers {
                     $"{model.FirstName} {model.LastName}",
                     model.Username,
                     "Shopping - Confirmación de Email",
-                    $"<h1>Shopping - Confirmación de Email</h1>" +
-                        $"Para habilitar el usuario por favor hacer click en el siguiente link:, " +
-                        $"<p><a href = \"{tokenLink}\">Confirmar Email</a></p>");
+                    _bodyMailHelper.GetConfirmEmailMessage(tokenLink)
+                );
+                
                 if (response.IsSuccess) {
                     _flashMessage.Info("Email Re-Envíado. Para poder ingresar al sistema, siga las instrucciones que han sido enviadas a su correo.");
                     return RedirectToAction(nameof(Login));
@@ -354,8 +351,13 @@ namespace ShoppingCar.Controllers {
 
                 _flashMessage.Danger(response.Message);
             }
+
             return View(model);
         }*/
+
+        public dynamic GetViewBag() {
+            return ViewBag;
+        }
 
         public JsonResult GetStates(int countryId) {
             var states = _getLocation.GetStates(countryId);
