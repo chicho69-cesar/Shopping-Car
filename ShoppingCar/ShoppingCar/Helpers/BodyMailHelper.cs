@@ -8,7 +8,7 @@
                 "Para habilitar este usuario por favor " +
                 "haga click en el siguiente link: </p>";
 
-            string link = $"<a style=\"display: block; padding: 10px 20px; margin: 20px 40px; text-decoration: none; " +
+            string link = $"<a style=\"cursor: pointer; display: inline-block; padding: 10px 20px; margin: 20px 40px; text-decoration: none; " +
                 $"color: #2f9ddd; font-size: 20px; border: 2px solid #2f9ddd;\"" +
                 $" href=\"{tokenLink}\">Confirmar Email</a>";
 
