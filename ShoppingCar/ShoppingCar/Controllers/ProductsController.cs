@@ -6,6 +6,7 @@ using ShoppingCar.Data.Entities;
 using ShoppingCar.Helpers;
 using ShoppingCar.Models;
 using Vereyon.Web;
+using static ShoppingCar.Helpers.ModalHelper;
 
 namespace ShoppingCar.Controllers {
     [Authorize(Roles = "Admin")]
@@ -36,7 +37,7 @@ namespace ShoppingCar.Controllers {
                 .ToListAsync());
         }
 
-        [HttpGet]
+        [NoDirectAccess]
         public async Task<IActionResult> Create() {
             var model = new CreateProductViewModel {
                 Categories = await _combosHelper.GetComboCategoriesAsync(),
@@ -77,8 +78,19 @@ namespace ShoppingCar.Controllers {
                 try {
                     _context.Add(product);
                     await _context.SaveChangesAsync();
+
+                    _flashMessage.Confirmation("Producto creado con exito");
                     
-                    return RedirectToAction(nameof(Index));
+                    return Json(new {
+                        isValid = true,
+                        html = ModalHelper.RenderRazorViewToString(
+                            this, "_ViewAllProducts", 
+                            _context.Products
+                                .Include(p => p.ProductImages)
+                                .Include(p => p.ProductCategories)
+                                .ThenInclude(pc => pc.Category).ToList()
+                        )
+                    });
                 } catch (DbUpdateException dbUpdateException) {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate")) {
                         _flashMessage.Danger("Ya existe un producto con el mismo nombre");
@@ -91,11 +103,11 @@ namespace ShoppingCar.Controllers {
             }
 
             model.Categories = await _combosHelper.GetComboCategoriesAsync();
-            
-            return View(model);
+
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "Create", model) });
         }
 
-        [HttpGet]
+        [NoDirectAccess]
         public async Task<IActionResult> Edit(int? id) {
             if (id == null) {
                 return NotFound();
@@ -133,8 +145,19 @@ namespace ShoppingCar.Controllers {
                 
                 _context.Update(product);
                 await _context.SaveChangesAsync();
+
+                _flashMessage.Confirmation("Producto actualizado con exito");
                 
-                return RedirectToAction(nameof(Index));
+                return Json(new {
+                    isValid = true,
+                    html = ModalHelper.RenderRazorViewToString(
+                        this, "_ViewAllProducts", 
+                        _context.Products
+                            .Include(p => p.ProductImages)
+                            .Include(p => p.ProductCategories)
+                            .ThenInclude(pc => pc.Category).ToList()
+                    )
+                });
             } catch (DbUpdateException dbUpdateException) {
                 if (dbUpdateException.InnerException.Message.Contains("duplicate")) {
                     _flashMessage.Danger("Ya existe un producto con el mismo nombre");
@@ -145,7 +168,7 @@ namespace ShoppingCar.Controllers {
                 _flashMessage.Danger(exception.Message);
             }
 
-            return View(model);
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "Edit", model) });
         }
 
         [HttpGet]
@@ -167,38 +190,25 @@ namespace ShoppingCar.Controllers {
             return View(product);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int? id) {
-            if (id == null) {
-                return NotFound();
-            }
-
+        [NoDirectAccess]
+        public async Task<IActionResult> Delete(int id) {
             Product product = await _context.Products
                 .Include(p => p.ProductCategories)
                 .Include(p => p.ProductImages)
                 .FirstOrDefaultAsync(p => p.Id == id);
-            
+
             if (product == null) {
                 return NotFound();
             }
 
-            return View(product);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(Product model) {
-            Product product = await _context.Products
-                .Include(p => p.ProductImages)
-                .Include(p => p.ProductCategories)
-                .FirstOrDefaultAsync(p => p.Id == model.Id);
+            foreach (ProductImage productImage in product.ProductImages) {
+                await _blobHelper.DeleteBlobAsync(productImage.ImageId, "products");
+            }
 
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
-            foreach (ProductImage productImage in product.ProductImages) {
-                await _blobHelper.DeleteBlobAsync(productImage.ImageId, "products");
-            }
+            _flashMessage.Info("Producto borrado con exito");
 
             return RedirectToAction(nameof(Index));
         }
