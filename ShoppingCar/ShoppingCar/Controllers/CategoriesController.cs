@@ -25,22 +25,6 @@ namespace ShoppingCar.Controllers {
                 .ToListAsync());
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Details(int? id) {
-            if (id == null || _context.Categories == null) {
-                return NotFound();
-            }
-
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(c => c.Id == id);
-
-            if (category is null) {
-                return NotFound();
-            }
-
-            return View(category);
-        }
-
         [NoDirectAccess]
         public async Task<IActionResult> Delete(int? id) {
             Category category = await _context.Categories

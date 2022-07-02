@@ -1,20 +1,23 @@
-﻿@model CityViewModel
+﻿@model Country
 
 @{
-    ViewData["Title"] = "Agregar una ciudad";
+    ViewData["Title"] = "País";
     Layout = null;
 }
 
 <flash dismissable="true" />
 
 <div class="container smfont">
-    <form asp-action="AddCity" autocomplete="off" asp-route-id="@Model.Id" onsubmit="return jQueryAjaxPost(this);">
+    <form asp-action="AddOrEdit" autocomplete="off" asp-route-id="@Model.Id" onsubmit="return jQueryAjaxPost(this);">
         <div class="box-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
-            <input type="hidden" asp-for="StateId" />
-            
-            <partial name="_City" />
+            <div class="form-group">
+                <span class="required">*</span>
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control smfont" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
         </div>
 
         <div class="modal-footer">

@@ -16,7 +16,12 @@
 
 <div class="mb-3">
     @foreach (var item in Model.Categories) {
-        <span class="text-black-50">@item.Name&nbsp;&nbsp;</span>
+        <span>
+            <a href="@Url.Action("Index", "Home", new { searchString = item.Name})" 
+            class="btn text-black btn-category">
+                @item.Name&nbsp;
+            </a>
+        </span>
     }
 </div>
 
@@ -59,8 +64,7 @@
                 </div>
             </div>
         }
-    }
-    else {
+    } else {
         <h3>No hay productos con su criterio de búsqueda</h3>
     }
 </div>
@@ -88,6 +92,10 @@
 </div>
 
 <style type="text/css">
+    .btn-category:hover {
+        color: #808080 !important;
+    }
+
     .card {
         display: flex;
         flex-direction: column;

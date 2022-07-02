@@ -2,30 +2,27 @@
 
 @{
     ViewData["Title"] = "Editar estado";
+    Layout = null;
 }
-
-<h1>Editar</h1>
-<h4>Estado</h4>
-
-<hr />
 
 <flash dismissable="true" />
 
-<div class="row">
-    <div class="col-md-12">
-        <form asp-action="EditState">
+<div class="container smfont">
+    <form asp-action="EditState" autocomplete="off" asp-route-id="@Model.Id" onsubmit="return jQueryAjaxPost(this);">
+        <div class="box-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="CountryId" />
+            
+            <partial name="_State"/>
+        </div>
 
-            <partial name="_State" model="@Model"/>
-
-            <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-outline-primary col-md-5 offset-1" />
-                <a asp-action="Details" asp-route-id="@Model.CountryId" class="btn btn-outline-success col-md-5">Regresar</a>
-            </div>
-        </form>
-    </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"><i class="fa fa-ban"></i> Cancelar</button>
+            <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Guardar</button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
