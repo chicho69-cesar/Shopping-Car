@@ -40,7 +40,7 @@ namespace ShoppingCar.Data.Entities {
 
         [Display(Name = "Foto")]
         public string ImageFullPath => ProductImages == null || ProductImages.Count == 0
-            ? $"https://localhost:7274/images/noimage.png"
+            ? $"https://shopping-cesar.azurewebsites.net/images/noimage.png"
             : ProductImages.FirstOrDefault().ImageFullPath;
 
         public ICollection<SaleDetail> SaleDetails { get; set; }

@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using ShoppingCar.Data;
 using ShoppingCar.Data.Entities;
 using ShoppingCar.Helpers;
+using ShoppingCar.Validations;
 using Vereyon.Web;
-using static ShoppingCar.Helpers.ModalHelper;
 
 namespace ShoppingCar.Controllers {
     [Authorize(Roles = "Admin")]

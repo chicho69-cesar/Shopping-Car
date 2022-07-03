@@ -79,7 +79,7 @@ namespace ShoppingCar.Controllers {
                 User user = await _userHelper.AddUserAsync(model);
                 
                 if (user == null) {
-                    _flashMessage.Danger("Este correo ya está siendo usado");
+                    _flashMessage.Danger("Este correo ya está siendo usado, o la contraseña es incorrecta");
 
                     model.Countries = await _combosHelper.GetComboCountriesAsync();
                     model.States = await _combosHelper.GetComboStatesAsync(0);
@@ -113,6 +113,8 @@ namespace ShoppingCar.Controllers {
 
                 _flashMessage.Danger(response.Message);
             }
+
+            _flashMessage.Danger("La informacion no es correcta revisa otra vez");
 
             return View(model);
         }

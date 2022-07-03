@@ -11,7 +11,7 @@ namespace ShoppingCar.Data.Entities {
 
         [Display(Name = "Foto")]
         public string ImageFullPath => ImageId == Guid.Empty
-            ? $"https://localhost:7274/images/noimage.png"
+            ? $"https://shopping-cesar.azurewebsites.net/images/noimage.png"
             : $"https://shoppingcar.blob.core.windows.net/products/{ImageId}";
     }
 }

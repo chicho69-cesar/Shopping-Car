@@ -19,6 +19,8 @@ using ShoppingCar.Data;
 using ShoppingCar.Data.Entities;
 using ShoppingCar.Helpers;
 using Vereyon.Web;
+using Microsoft.Extensions.Azure;
+using ShoppingCar.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,17 +31,16 @@ builder.Services.AddDbContext<DataContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-//TODO: Make strongest password in order to go to production
 builder.Services.AddIdentity<User, IdentityRole>(config => {
     config.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
     config.SignIn.RequireConfirmedEmail = true;
     config.User.RequireUniqueEmail = true;
-    config.Password.RequireDigit = false;
+    config.Password.RequireDigit = true;
     config.Password.RequiredUniqueChars = 0;
-    config.Password.RequireLowercase = false;
-    config.Password.RequireNonAlphanumeric = false;
+    config.Password.RequireLowercase = true;
+    config.Password.RequireNonAlphanumeric = true;
     config.Password.RequireUppercase = false;
-    config.Password.RequiredLength = 6;
+    config.Password.RequiredLength = 8;
     config.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     config.Lockout.MaxFailedAccessAttempts = 3;
     config.Lockout.AllowedForNewUsers = true;
@@ -61,6 +62,7 @@ builder.Services.AddScoped<IGetLocation, GetLocation>();
 builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddScoped<IBodyMailHelper, BodyMailHelper>();
 builder.Services.AddScoped<IOrdersHelper, OrdersHelper>();
+builder.Services.AddScoped<IApiService, ApiService>();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 var app = builder.Build();

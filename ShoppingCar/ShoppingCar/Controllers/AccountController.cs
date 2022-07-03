@@ -102,7 +102,7 @@ namespace ShoppingCar.Controllers {
                 User user = await _userHelper.AddUserAsync(model);
 
                 if (user == null) {
-                    _flashMessage.Danger("Este correo ya está siendo usado.");
+                    _flashMessage.Danger("Este correo ya está siendo usado, o la contraseña no es valida.");
 
                     model.Countries = await _combosHelper.GetComboCountriesAsync();
                     model.States = await _combosHelper.GetComboStatesAsync(0);
@@ -136,6 +136,8 @@ namespace ShoppingCar.Controllers {
             model.Countries = await _combosHelper.GetComboCountriesAsync();
             model.States = await _combosHelper.GetComboStatesAsync(0);
             model.Cities = await _combosHelper.GetComboCitiesAsync(0);
+
+            _flashMessage.Danger("La informacion que proporsionaste no es valida vuelve a intentarlo");
 
             return View(model);
         }
@@ -319,7 +321,7 @@ namespace ShoppingCar.Controllers {
             return View(model);
         }
 
-        /* TODO: Descubrir para que mierda es esto
+        /* TODO: Descubrir para que mierda es esto*/
         [HttpGet]
         public IActionResult ResendToken() {
             return View();
@@ -352,8 +354,10 @@ namespace ShoppingCar.Controllers {
                 _flashMessage.Danger(response.Message);
             }
 
+            _flashMessage.Danger("Ocurrio un error con la información proporcionada");
+
             return View(model);
-        }*/
+        }
 
         public dynamic GetViewBag() {
             return ViewBag;
