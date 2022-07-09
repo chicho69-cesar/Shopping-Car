@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCar.Common;
@@ -16,19 +17,22 @@ namespace ShoppingCar.Controllers {
         private readonly IUserHelper _userHelper;
         private readonly IOrdersHelper _ordersHelper;
         private readonly IFlashMessage _flashMessage;
+        private readonly IMapper _mapper;
 
         public HomeController(
             ILogger<HomeController> logger,
             DataContext context,
             IUserHelper userHelper,
             IOrdersHelper ordersHelper,
-            IFlashMessage flashMessage
+            IFlashMessage flashMessage,
+            IMapper mapper
         ) {
             _logger = logger;
             _context = context;
             _userHelper = userHelper;
             _ordersHelper = ordersHelper;
             _flashMessage = flashMessage;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -157,7 +161,7 @@ namespace ShoppingCar.Controllers {
                 Price = product.Price,
                 ProductImages = product.ProductImages,
                 Quantity = 1,
-                Stock = product.Stock,
+                Stock = product.Stock
             };
 
             return View(model);

@@ -63,6 +63,7 @@ builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddScoped<IBodyMailHelper, BodyMailHelper>();
 builder.Services.AddScoped<IOrdersHelper, OrdersHelper>();
 builder.Services.AddScoped<IApiService, ApiService>();
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 var app = builder.Build();
