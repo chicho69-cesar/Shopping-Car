@@ -228,11 +228,6 @@ namespace ShoppingCar.Controllers {
         }
 
         [HttpGet]
-        public IActionResult NotAuthorized() {
-            return View();
-        }
-
-        [HttpGet]
         public async Task<IActionResult> ChangeUser() {
             User user = await _userHelper.GetUserAsync(User.Identity.Name);
             
@@ -358,6 +353,11 @@ namespace ShoppingCar.Controllers {
             _flashMessage.Danger("Ocurrio un error con la información proporcionada");
 
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult NotAuthorized() {
+            return View();
         }
 
         public dynamic GetViewBag() {
